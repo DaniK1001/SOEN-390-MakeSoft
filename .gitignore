@@ -1,0 +1,14 @@
+# BACKEND API
+
+# Ignore build directories and IDE files
+target/
+*.iml
+.idea/
+*.log
+.mvn/
+.vscode/
+
+# FRONTEND
+
+# Ignore node modules and build directories
+node_modules/
