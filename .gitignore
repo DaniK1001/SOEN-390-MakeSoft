@@ -7,7 +7,7 @@ target/
 *.log
 .mvn/
 .vscode/
-
+*.DS_Store
 # FRONTEND
 
 # Ignore node modules and build directories
