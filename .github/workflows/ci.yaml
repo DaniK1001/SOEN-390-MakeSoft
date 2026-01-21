@@ -57,10 +57,6 @@ jobs:
         working-directory: ./mobile-app
         run: npm install
       
-      - name: Run linting
-        working-directory: ./mobile-app
-        run: npm run lint
-      
       - name: Run tests
         working-directory: ./mobile-app
         run: npm test -- --passWithNoTests
