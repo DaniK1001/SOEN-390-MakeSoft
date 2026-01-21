@@ -55,7 +55,7 @@ jobs:
       
       - name: Install dependencies
         working-directory: ./mobile-app
-        run: npm ci
+        run: npm install
       
       - name: Run linting
         working-directory: ./mobile-app
