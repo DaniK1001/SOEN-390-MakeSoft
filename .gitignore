@@ -1,14 +1,47 @@
-# BACKEND API
-
-# Ignore build directories and IDE files
+# ===== Backend =====
 target/
+.mvn/
 *.iml
 .idea/
 *.log
-.mvn/
-.vscode/
 
-# FRONTEND
-
-# Ignore node modules and build directories
+# ===== Frontend / Expo =====
 node_modules/
+.expo/
+dist/
+web-build/
+
+# Generated native folders
+mobile-app/ios/
+mobile-app/android/
+
+# Native / mobile
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+
+# Metro
+.metro-health-check*
+
+# Debug logs
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# TypeScript
+*.tsbuildinfo
+
+# OS / IDE
+.DS_Store
+.vscode/
+expo-env.d.ts
