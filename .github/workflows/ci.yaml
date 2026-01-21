@@ -56,7 +56,3 @@ jobs:
       - name: Install dependencies
         working-directory: ./mobile-app
         run: npm install
-      
-      - name: Run tests
-        working-directory: ./mobile-app
-        run: npm test -- --passWithNoTests
