@@ -1,5 +1,5 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet, Button, ActivityIndicator, View } from 'react-native';
+import { Platform, StyleSheet, Button, View } from 'react-native';
 import { useState } from 'react';
 
 import { HelloWave } from '@/components/hello-wave';

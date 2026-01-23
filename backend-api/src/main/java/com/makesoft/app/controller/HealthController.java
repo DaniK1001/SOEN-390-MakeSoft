@@ -12,7 +12,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 public class HealthController {
-    private Logger logger = org.slf4j.LoggerFactory.getLogger(HealthController.class);
+    private final Logger logger = org.slf4j.LoggerFactory.getLogger(HealthController.class);
 
     @GetMapping("/health")
     public Map<String, String> health() {
