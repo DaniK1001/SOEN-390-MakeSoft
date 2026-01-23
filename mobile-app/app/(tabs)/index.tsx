@@ -1,13 +1,31 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet, Button, ActivityIndicator, View } from 'react-native';
+import { useState } from 'react';
 
 import { HelloWave } from '@/components/hello-wave';
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Link } from 'expo-router';
+import { testConnection } from '@/services/api';
 
 export default function HomeScreen() {
+  const [status, setStatus] = useState<string>('Not tested');
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleTestConnection = async () => {
+    setLoading(true);
+    setStatus('Testing...');
+    const result = await testConnection();
+
+    if (result.success) {
+      setStatus(`Connected: ${result.data.status}`);
+    } else {
+      setStatus(`Error: ${result.error}`);
+    }
+    setLoading(false);
+  };
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -20,6 +38,17 @@ export default function HomeScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
+      </ThemedView>
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">Backend Connection</ThemedText>
+        <ThemedText style={styles.statusText}>{status}</ThemedText>
+        <View style={styles.buttonContainer}>
+          <Button
+            title={loading ? "Testing..." : "Test Backend Connection"}
+            onPress={handleTestConnection}
+            disabled={loading}
+          />
+        </View>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
@@ -87,6 +116,14 @@ const styles = StyleSheet.create({
   stepContainer: {
     gap: 8,
     marginBottom: 8,
+  },
+  statusText: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginVertical: 8,
+  },
+  buttonContainer: {
+    marginTop: 8,
   },
   reactLogo: {
     height: 178,
