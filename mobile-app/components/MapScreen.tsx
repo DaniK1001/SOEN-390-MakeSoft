@@ -61,8 +61,6 @@ function toRgba(color: string, alpha: number): string {
 }
 
 
-
-
 export default function MapScreen() {
     const [selectedBuildingId, setSelectedBuildingId] = useState<string | null>(null);
     const theme = useTheme();
@@ -174,6 +172,109 @@ export default function MapScreen() {
             </Modal>
         </View>
     );
+  };
+
+  const ensureLocationPermission = async (): Promise<boolean> => {
+    // Check current permission
+    const current = await Location.getForegroundPermissionsAsync();
+
+    if (current.status === "granted") return true;
+
+    // Try requesting (OS may show popup only if allowed)
+    const requested = await Location.requestForegroundPermissionsAsync();
+
+    if (requested.status === "granted") return true;
+
+    // If still denied, direct user to settings (this covers "Don't ask again" cases)
+    promptToOpenSettings();
+    return false;
+  };
+
+  // Optional: try once when screen opens (won’t always show popup if previously denied)
+  useEffect(() => {
+    (async () => {
+      try {
+        await ensureLocationPermission();
+      } catch (e) {
+        console.log("Permission check error:", e);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const goToUserLocation = async () => {
+    setIsLocating(true);
+    try {
+      const ok = await ensureLocationPermission();
+      if (!ok) return;
+
+      const location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced,
+      });
+
+      const { latitude, longitude } = location.coords;
+
+      mapRef.current?.animateToRegion(
+        {
+          latitude,
+          longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        },
+        500
+      );
+    } catch (error) {
+      console.error("Error getting location:", error);
+      Alert.alert("Error", "Could not get your location.");
+    } finally {
+      setIsLocating(false);
+    }
+  };
+
+  return (
+    <View style={{ flex: 1 }}>
+      <MapView
+        ref={mapRef}
+        style={{ flex: 1 }}
+        provider="google"
+        initialRegion={{
+          latitude: 45.4973, // SGW
+          longitude: -73.5789,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        }}
+        showsUserLocation
+      />
+
+      <Pressable
+        onPress={goToUserLocation}
+        disabled={isLocating}
+        style={{
+          position: "absolute",
+          bottom: 20,
+          right: 20,
+          backgroundColor: "#ffffff",
+          borderRadius: 50,
+          width: 52,
+          height: 52,
+          justifyContent: "center",
+          alignItems: "center",
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.25,
+          shadowRadius: 3,
+          elevation: 5,
+          opacity: isLocating ? 0.85 : 1,
+        }}
+      >
+        {isLocating ? (
+          <ActivityIndicator size="small" color="#c41230" />
+        ) : (
+          <MaterialIcons name="my-location" size={24} color="#c41230" />
+        )}
+      </Pressable>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
